@@ -92,10 +92,10 @@ function _recursive(parent, nodes) {
                 result = {$class : `${NS}.BlockQuote`, nodes: []};
                 break;
             case 'code_block':
-                result = {$class : `${NS}.CodeBlock`};
+                result = {$class : `${NS}.CodeBlock`, text: node.text};
                 break;
             case 'html_block':
-                result = {$class : `${NS}.HtmlBlock`};
+                result = {$class : `${NS}.HtmlBlock`, text: node.text};
                 break;
             case 'html_inline':
                 result = {$class : `${NS}.HtmlInline`};
@@ -123,13 +123,8 @@ function _recursive(parent, nodes) {
         }
 
         // process any children, attaching to first child if it exists (for list items)
-        if(json.nodes) {
-            if(result.nodes) {
-                _recursive(result.nodes[0] ? result.nodes[0] : result, json.nodes);
-            }
-            // else {
-            //     throw new Error(`Node ${JSON.stringify(result)} doesn't have children to hold ${JSON.stringify(json)}`);
-            // }
+        if(json.nodes && result.nodes) {
+            _recursive(result.nodes[0] ? result.nodes[0] : result, json.nodes);
         }
 
         if(!parent.nodes) {

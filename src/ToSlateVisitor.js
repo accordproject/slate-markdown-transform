@@ -17,11 +17,7 @@
 const ToStringVisitor = require('@accordproject/markdown-transform').ToStringVisitor;
 
 /**
- * Converts a commonmark model instance to a markdown string.
- *
- * Note that there are several ways of representing the same markdown AST as text,
- * so this transformation is not guaranteed to equivalent if you roundtrip
- * markdown content. The resulting AST *should* be equivalent however.
+ * Converts a commonmark AST to a Slate DOM.
  */
 class ToSlateVisitor {
 
@@ -56,7 +52,7 @@ class ToSlateVisitor {
 
         switch(thing.getType()) {
         case 'CodeBlock':
-            parameters.result += `\`\`\` ${thing.info ? thing.info : ''}\n${thing.text}\`\`\`\n\n`;
+            parameters.result += `\`\`\` ${thing.info ? thing.info : ''}\n${ToStringVisitor.visitChildren(this, thing)}\`\`\`\n\n`;
             break;
         case 'Code':
             parameters.result += `\`${thing.text}\``;
