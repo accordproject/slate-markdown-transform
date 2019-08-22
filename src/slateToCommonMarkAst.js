@@ -46,12 +46,15 @@ function _recursive(parent, nodes) {
 
         let result = null;
 
-        switch (node.object) {
+        // convert to the slate object to a plain js object
+        const json = JSON.parse(JSON.stringify(node));
+
+        switch (json.object) {
         case 'text':
-            result = handleText(node);
+            result = handleText(json);
             break;
         default:
-            switch(node.type) {
+            switch(json.type) {
             case 'paragraph':
                 result = {$class : `${NS}.Paragraph`, nodes: []};
                 break;
@@ -62,22 +65,28 @@ function _recursive(parent, nodes) {
                 result = {$class : `${NS}.ThematicBreak`};
                 break;
             case 'heading_one':
-                result = {$class : `${NS}.Heading`, level : '1', text: node.nodes[0].text};
+                result = {$class : `${NS}.Heading`, level : '1', nodes: []};
+                result.nodes.push({$class : `${NS}.Paragraph`, nodes: []});
                 break;
             case 'heading_two':
-                result = {$class : `${NS}.Heading`, level : '2', text: node.nodes[0].text};
+                result = {$class : `${NS}.Heading`, level : '2', nodes: []};
+                result.nodes.push({$class : `${NS}.Paragraph`, nodes: []});
                 break;
             case 'heading_three':
-                result = {$class : `${NS}.Heading`, level : '3', text: node.nodes[0].text};
+                result = {$class : `${NS}.Heading`, level : '3', nodes: []};
+                result.nodes.push({$class : `${NS}.Paragraph`, nodes: []});
                 break;
             case 'heading_four':
-                result = {$class : `${NS}.Heading`, level : '4', text: node.nodes[0].text};
+                result = {$class : `${NS}.Heading`, level : '4', nodes: []};
+                result.nodes.push({$class : `${NS}.Paragraph`, nodes: []});
                 break;
             case 'heading_five':
-                result = {$class : `${NS}.Heading`, level : '5', text: node.nodes[0].text};
+                result = {$class : `${NS}.Heading`, level : '5', nodes: []};
+                result.nodes.push({$class : `${NS}.Paragraph`, nodes: []});
                 break;
             case 'heading_six':
-                result = {$class : `${NS}.Heading`, level : '6', text: node.nodes[0].text};
+                result = {$class : `${NS}.Heading`, level : '6', nodes: []};
+                result.nodes.push({$class : `${NS}.Paragraph`, nodes: []});
                 break;
             case 'block_quote':
                 result = {$class : `${NS}.BlockQuote`, nodes: []};
@@ -103,7 +112,6 @@ function _recursive(parent, nodes) {
                 result.nodes.push({$class : `${NS}.Paragraph`, nodes: []});
                 break;
             case 'link': {
-                const json = JSON.parse(JSON.stringify(node)); // not sure why we have to do this for inlines...
                 result = {$class : `${NS}.Link`, destination: json.data.href, title: '', nodes: []};
                 break;
             }
@@ -111,17 +119,17 @@ function _recursive(parent, nodes) {
         }
 
         if(!result) {
-            throw Error(`Failed to process node ${JSON.stringify(node)}`);
+            throw Error(`Failed to process node ${JSON.stringify(json)}`);
         }
 
         // process any children, attaching to first child if it exists (for list items)
-        if(node.nodes) {
+        if(json.nodes) {
             if(result.nodes) {
-                _recursive(result.nodes[0] ? result.nodes[0] : result, node.nodes);
+                _recursive(result.nodes[0] ? result.nodes[0] : result, json.nodes);
             }
-            else {
-                throw new Error(`Node ${JSON.stringify(result)} doesn't have children.`);
-            }
+            // else {
+            //     throw new Error(`Node ${JSON.stringify(result)} doesn't have children to hold ${JSON.stringify(json)}`);
+            // }
         }
 
         if(!parent.nodes) {
