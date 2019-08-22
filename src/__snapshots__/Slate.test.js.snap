@@ -64,6 +64,133 @@ Object {
 }
 `;
 
+exports[`slate converts link.json to concerto 1`] = `
+Object {
+  "$class": "org.accordproject.commonmark.Document",
+  "nodes": Array [
+    Object {
+      "$class": "org.accordproject.commonmark.Paragraph",
+      "nodes": Array [
+        Object {
+          "$class": "org.accordproject.commonmark.Text",
+          "text": "a ",
+        },
+        Object {
+          "$class": "org.accordproject.commonmark.Link",
+          "destination": "http://clause.io",
+          "nodes": Array [
+            Object {
+              "$class": "org.accordproject.commonmark.Text",
+              "text": "link",
+            },
+          ],
+          "title": "",
+        },
+        Object {
+          "$class": "org.accordproject.commonmark.Text",
+          "text": "",
+        },
+      ],
+    },
+  ],
+  "xmlns": "slate",
+}
+`;
+
+exports[`slate converts ordered.json to concerto 1`] = `
+Object {
+  "$class": "org.accordproject.commonmark.Document",
+  "nodes": Array [
+    Object {
+      "$class": "org.accordproject.commonmark.List",
+      "nodes": Array [
+        Object {
+          "$class": "org.accordproject.commonmark.Item",
+          "nodes": Array [
+            Object {
+              "$class": "org.accordproject.commonmark.Paragraph",
+              "nodes": Array [
+                Object {
+                  "$class": "org.accordproject.commonmark.Text",
+                  "text": "one",
+                },
+              ],
+            },
+          ],
+        },
+        Object {
+          "$class": "org.accordproject.commonmark.Item",
+          "nodes": Array [
+            Object {
+              "$class": "org.accordproject.commonmark.Paragraph",
+              "nodes": Array [
+                Object {
+                  "$class": "org.accordproject.commonmark.Text",
+                  "text": "two",
+                },
+              ],
+            },
+          ],
+        },
+        Object {
+          "$class": "org.accordproject.commonmark.Item",
+          "nodes": Array [
+            Object {
+              "$class": "org.accordproject.commonmark.Paragraph",
+              "nodes": Array [
+                Object {
+                  "$class": "org.accordproject.commonmark.Text",
+                  "text": "three",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      "tight": "true",
+      "type": "ordered",
+    },
+  ],
+  "xmlns": "slate",
+}
+`;
+
+exports[`slate converts paragraphs.json to concerto 1`] = `
+Object {
+  "$class": "org.accordproject.commonmark.Document",
+  "nodes": Array [
+    Object {
+      "$class": "org.accordproject.commonmark.Paragraph",
+      "nodes": Array [
+        Object {
+          "$class": "org.accordproject.commonmark.Text",
+          "text": "one",
+        },
+      ],
+    },
+    Object {
+      "$class": "org.accordproject.commonmark.Paragraph",
+      "nodes": Array [
+        Object {
+          "$class": "org.accordproject.commonmark.Text",
+          "text": "two",
+        },
+      ],
+    },
+    Object {
+      "$class": "org.accordproject.commonmark.Paragraph",
+      "nodes": Array [
+        Object {
+          "$class": "org.accordproject.commonmark.Text",
+          "text": "three",
+        },
+      ],
+    },
+  ],
+  "xmlns": "slate",
+}
+`;
+
 exports[`slate converts plain.json to concerto 1`] = `
 Object {
   "$class": "org.accordproject.commonmark.Document",
@@ -74,6 +201,24 @@ Object {
         Object {
           "$class": "org.accordproject.commonmark.Text",
           "text": "plain",
+        },
+      ],
+    },
+  ],
+  "xmlns": "slate",
+}
+`;
+
+exports[`slate converts quote.json to concerto 1`] = `
+Object {
+  "$class": "org.accordproject.commonmark.Document",
+  "nodes": Array [
+    Object {
+      "$class": "org.accordproject.commonmark.BlockQuote",
+      "nodes": Array [
+        Object {
+          "$class": "org.accordproject.commonmark.Text",
+          "text": "this is a quote",
         },
       ],
     },
@@ -142,6 +287,64 @@ Object {
           "text": "code",
         },
       ],
+    },
+  ],
+  "xmlns": "slate",
+}
+`;
+
+exports[`slate converts unordered.json to concerto 1`] = `
+Object {
+  "$class": "org.accordproject.commonmark.Document",
+  "nodes": Array [
+    Object {
+      "$class": "org.accordproject.commonmark.List",
+      "nodes": Array [
+        Object {
+          "$class": "org.accordproject.commonmark.Item",
+          "nodes": Array [
+            Object {
+              "$class": "org.accordproject.commonmark.Paragraph",
+              "nodes": Array [
+                Object {
+                  "$class": "org.accordproject.commonmark.Text",
+                  "text": "one",
+                },
+              ],
+            },
+          ],
+        },
+        Object {
+          "$class": "org.accordproject.commonmark.Item",
+          "nodes": Array [
+            Object {
+              "$class": "org.accordproject.commonmark.Paragraph",
+              "nodes": Array [
+                Object {
+                  "$class": "org.accordproject.commonmark.Text",
+                  "text": "two",
+                },
+              ],
+            },
+          ],
+        },
+        Object {
+          "$class": "org.accordproject.commonmark.Item",
+          "nodes": Array [
+            Object {
+              "$class": "org.accordproject.commonmark.Paragraph",
+              "nodes": Array [
+                Object {
+                  "$class": "org.accordproject.commonmark.Text",
+                  "text": "three",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      "tight": "true",
+      "type": "bullet",
     },
   ],
   "xmlns": "slate",

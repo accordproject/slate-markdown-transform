@@ -1,0 +1,52 @@
+{
+    "object": "value",
+    "document": {
+        "object": "document",
+        "data": {},
+        "nodes": [
+            {
+                "object": "block",
+                "type": "ul_list",
+                "data": {},
+                "nodes": [
+                    {
+                        "object": "block",
+                        "type": "list_item",
+                        "data": {},
+                        "nodes": [
+                            {
+                                "object": "text",
+                                "text": "one",
+                                "marks": []
+                            }
+                        ]
+                    },
+                    {
+                        "object": "block",
+                        "type": "list_item",
+                        "data": {},
+                        "nodes": [
+                            {
+                                "object": "text",
+                                "text": "two",
+                                "marks": []
+                            }
+                        ]
+                    },
+                    {
+                        "object": "block",
+                        "type": "list_item",
+                        "data": {},
+                        "nodes": [
+                            {
+                                "object": "text",
+                                "text": "three",
+                                "marks": []
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

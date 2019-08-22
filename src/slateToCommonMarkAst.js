@@ -80,7 +80,7 @@ function _recursive(parent, nodes) {
                 result = {$class : `${NS}.Heading`, level : '6', text: node.nodes[0].text};
                 break;
             case 'block_quote':
-                result = {$class : `${NS}.BlockQuote`};
+                result = {$class : `${NS}.BlockQuote`, nodes: []};
                 break;
             case 'code_block':
                 result = {$class : `${NS}.CodeBlock`};
@@ -91,6 +91,22 @@ function _recursive(parent, nodes) {
             case 'html_inline':
                 result = {$class : `${NS}.HtmlInline`};
                 break;
+            case 'ol_list':
+                result = {$class : `${NS}.List`, type: 'ordered', tight: 'true', nodes: []};
+                break;
+            case 'ul_list':
+                result = {$class : `${NS}.List`, type: 'bullet', tight: 'true',
+                    nodes: []};
+                break;
+            case 'list_item':
+                result = {$class : `${NS}.Item`, nodes: []};
+                result.nodes.push({$class : `${NS}.Paragraph`, nodes: []});
+                break;
+            case 'link': {
+                const json = JSON.parse(JSON.stringify(node)); // not sure why we have to do this for inlines...
+                result = {$class : `${NS}.Link`, destination: json.data.href, title: '', nodes: []};
+                break;
+            }
             }
         }
 
@@ -98,9 +114,14 @@ function _recursive(parent, nodes) {
             throw Error(`Failed to process node ${JSON.stringify(node)}`);
         }
 
-        // process any children
+        // process any children, attaching to first child if it exists (for list items)
         if(node.nodes) {
-            _recursive(result, node.nodes);
+            if(result.nodes) {
+                _recursive(result.nodes[0] ? result.nodes[0] : result, node.nodes);
+            }
+            else {
+                throw new Error(`Node ${JSON.stringify(result)} doesn't have children.`);
+            }
         }
 
         if(!parent.nodes) {

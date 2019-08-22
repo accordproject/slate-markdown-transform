@@ -71,7 +71,7 @@
     "webpack-cli": "^3.3.5"
   },
   "dependencies": {
-    "@accordproject/markdown-transform": "^0.1.7",
+    "@accordproject/markdown-transform": "^0.1.8",
     "immutable": "^4.0.0-rc.12",
     "install": "^0.13.0",
     "npm": "^6.11.1",

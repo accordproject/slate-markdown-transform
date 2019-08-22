@@ -57,7 +57,7 @@ describe('slate', () => {
             const value = Value.fromJSON(JSON.parse(jsonText));
             const concertoObject = slateToCommonMarkAst(value.document);
             const json = parser.getSerializer().toJSON(concertoObject);
-            console.log(JSON.stringify(json, null, 4));
+            // console.log(JSON.stringify(json, null, 4));
             expect(json).toMatchSnapshot();
 
             // load expected markdown

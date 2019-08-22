@@ -1,0 +1,21 @@
+{
+    "object": "value",
+    "document": {
+        "object": "document",
+        "data": {},
+        "nodes": [
+            {
+                "object": "block",
+                "type": "block_quote",
+                "data": {},
+                "nodes": [
+                    {
+                        "object": "text",
+                        "text": "this is a quote",
+                        "marks": []
+                    }
+                ]
+            }
+        ]
+    }
+}
