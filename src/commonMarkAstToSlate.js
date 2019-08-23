@@ -24,6 +24,7 @@ const ToSlateVisitor = require('./ToSlateVisitor');
 function commonMarkAstToSlate(concertoObject) {
     const parameters = {};
     parameters.result = {};
+    parameters.marks = [];
     const visitor = new ToSlateVisitor();
     concertoObject.accept( visitor, parameters );
     return parameters.result;

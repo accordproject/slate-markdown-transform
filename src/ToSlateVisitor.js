@@ -14,7 +14,7 @@
 
 'use strict';
 
-const ToStringVisitor = require('@accordproject/markdown-transform').ToStringVisitor;
+const CommonMarkParser = require('@accordproject/markdown-transform').CommonMarkParser;
 
 /**
  * Converts a commonmark AST to a Slate DOM.
@@ -22,114 +22,285 @@ const ToStringVisitor = require('@accordproject/markdown-transform').ToStringVis
 class ToSlateVisitor {
 
     /**
-     * Visits a sub-tree and return the markdown
-     * @param {*} visitor the visitor to use
-     * @param {*} thing the node to visit
-     * @param {*} [parameters] optional parameters
-     * @returns {string} the markdown for the sub tree
+     * Converts a sub-tree of formatting nodes to an array of marks
+     * @param {*} thing a concerto Strong, Emph or Text node
+     * @param {*} marks an initial set of marks
+     * @returns {*} the array of slate marks to use
      */
-    static visitChildren(visitor, thing, parameters) {
-        if(!parameters) {
-            parameters = {};
-            parameters.result = '';
-        }
+    static getMarks(thing, marks) {
+        let result = Array.from(marks);
 
-        if(thing.nodes) {
-            thing.nodes.forEach(node => {
-                node.accept(visitor, parameters);
+        switch(thing.getType()) {
+        case 'Strong':
+            result.push({
+                object: 'mark',
+                type: 'bold',
+                data: {}
             });
+            break;
+        case 'Emph':
+            result.push({
+                object: 'mark',
+                type: 'italic',
+                data: {}
+            });
+            break;
         }
 
-        return parameters.result;
+        if(thing.nodes && thing.nodes.length > 0) {
+            result = ToSlateVisitor.getMarks(thing.nodes[0], result);
+        }
+
+        return result;
     }
 
     /**
-     * Visit a node
+     * Gets the text value from a formatted sub-tree
+     * @param {*} thing a concerto Strong, Emph or Text node
+     * @returns {string} the 'text' property of the formatted sub-tree
+     */
+    static getText(thing) {
+        if(thing.getType() === 'Text') {
+            return thing.text;
+        }
+        else {
+            if(thing.nodes && thing.nodes.length > 0) {
+                return ToSlateVisitor.getText(thing.nodes[0]);
+            }
+            else {
+                return null;
+            }
+        }
+    }
+
+    /**
+     * Converts a heading level to a slate heading type name
+     * @param {*} thing concert heading node
+     * @returns {string} the slate heading type
+     */
+    static getHeadingType(thing) {
+        switch(thing.level) {
+        case '1': return 'heading_one';
+        case '2': return 'heading_two';
+        case '3': return 'heading_three';
+        case '4': return 'heading_four';
+        case '5': return 'heading_five';
+        case '6': return 'heading_six';
+        default: return 'heading_one';
+        }
+    }
+
+    /**
+     * Converts a formatted text node to a slate text node with marks
+     * @param {*} thing a concerto Strong, Emph or Text node
+     * @returns {*} the slate text node with marks
+     */
+    static handleFormattedText(thing) {
+        return {
+            object: 'text',
+            text: ToSlateVisitor.getText(thing),
+            marks: ToSlateVisitor.getMarks(thing, []),
+        };
+    }
+
+    /**
+     * Returns the processed child nodes
+     * @param {*} thing a concerto ast nodes
+     * @returns {*} an array of slate nodes
+     */
+    processChildNodes(thing) {
+        const result = [];
+        if(!thing.nodes) {
+            throw new Error(`Node ${thing.getType()} doesn't have any children!`);
+        }
+
+        const parser = new CommonMarkParser();
+        const json = parser.getSerializer().toJSON(thing);
+        console.log('Processing', JSON.stringify(json, null, 4));
+
+        thing.nodes.forEach(node => {
+            console.log(`Processing ${thing.getType()} > ${node.getType()}`);
+            const child = {};
+            node.accept(this, child);
+            result.push(child.result);
+        });
+
+        return result;
+    }
+
+    /**
+     * Visit a concerto ast node and return the corresponding slate node
      * @param {*} thing the object being visited
      * @param {*} parameters the parameters
      */
     visit(thing, parameters) {
 
+        let result = null;
+
+        console.log('Processing', thing.getType());
         switch(thing.getType()) {
         case 'CodeBlock':
-            parameters.result += `\`\`\` ${thing.info ? thing.info : ''}\n${ToStringVisitor.visitChildren(this, thing)}\`\`\`\n\n`;
+            result = {
+                object: 'block',
+                type: 'code_block',
+                data: {},
+                nodes: [{
+                    object: 'block',
+                    type: 'paragraph',
+                    nodes: [{
+                        object: 'text',
+                        text: thing.text,
+                        marks: []
+                    }],
+                    data: {}
+                }]
+            };
             break;
         case 'Code':
-            parameters.result += `\`${thing.text}\``;
-            break;
-        case 'HtmlInline':
-            parameters.result += thing.text;
+            result = {
+                'object': 'text',
+                'text': thing.text,
+                'marks': [
+                    {
+                        'object': 'mark',
+                        'type': 'code',
+                        'data': {}
+                    }
+                ]
+            };
             break;
         case 'Emph':
-            parameters.result += `*${ToStringVisitor.visitChildren(this, thing)}*`;
-            break;
         case 'Strong':
-            parameters.result += `**${ToStringVisitor.visitChildren(this, thing)}**`;
+        case 'Text':
+            result = ToSlateVisitor.handleFormattedText(thing);
             break;
         case 'BlockQuote':
-            parameters.result += `> ${ToStringVisitor.visitChildren(this, thing)}`;
+            result = {
+                'object': 'block',
+                'type': 'block_quote',
+                'nodes': this.processChildNodes(thing)
+            };
             break;
         case 'Heading':
-            parameters.result += `${Array(parseInt(thing.level)).fill('#').join('')} ${ToStringVisitor.visitChildren(this, thing)}\n`;
+            result = {
+                'object': 'block',
+                'data': {},
+                'type': ToSlateVisitor.getHeadingType(thing),
+                'nodes': this.processChildNodes(thing)
+            };
             break;
         case 'ThematicBreak':
-            parameters.result += '---\n';
+            result = {
+                'object': 'block',
+                'type': 'paragraph',
+                'nodes': []
+            };
             break;
         case 'Linebreak':
-            parameters.result += '\\\n';
+            result = {
+                'object': 'block',
+                'type': 'paragraph',
+                'nodes': []
+            };
             break;
         case 'Softbreak':
-            parameters.result += '\n';
+            result = {
+                'object': 'block',
+                'type': 'paragraph',
+                'nodes': []
+            };
             break;
         case 'Link':
-            parameters.result += `[${ToStringVisitor.visitChildren(this, thing)}](${thing.destination})`;
+            result = {
+                'object': 'inline',
+                'type': 'link',
+                'data': {
+                    'href': thing.destination
+                },
+                'nodes': [
+                    {
+                        'object': 'text',
+                        'text': thing.nodes[0].text,
+                        'marks': []
+                    }
+                ]
+            };
             break;
         case 'Image':
-            parameters.result += `![${ToStringVisitor.visitChildren(this, thing)}](${thing.destination})`;
+            result = {
+                'object': 'inline',
+                'type': 'link',
+                'data': {
+                    'href': thing.destination
+                },
+                'nodes': [
+                    {
+                        'object': 'text',
+                        'text': thing.text,
+                        'marks': []
+                    }
+                ]
+            };
             break;
         case 'Paragraph':
-            parameters.result += `${ToStringVisitor.visitChildren(this, thing)}\n\n`;
+            result = {
+                'object': 'block',
+                'type': 'paragraph',
+                'nodes': this.processChildNodes(thing),
+                'data': {}
+            };
             break;
         case 'HtmlBlock':
-            parameters.result += `${thing.text}\n\n`;
-            break;
-        case 'Text':
-            parameters.result += thing.text;
-            break;
-        case 'List': {
-            let index = thing.start ? parseInt(thing.start) : 0;
-            thing.nodes.forEach(item => {
-                if(thing.type === 'ordered') {
-                    parameters.result += `${index++}. ${ToStringVisitor.visitChildren(this, item.nodes[0])}\n`;
-                }
-                else {
-                    parameters.result += `* ${ToStringVisitor.visitChildren(this, item.nodes[0])}\n`;
-                }
-                if(thing.tight === 'false') {
-                    parameters.result += '\n';
-                }
-            });
-
-            if(thing.tight !== 'false') {
-                parameters.result += '\n';
-            }
-        }
+        case 'HtmlInline':
+            result = {
+                object: 'block',
+                type: 'html_block',
+                data: {},
+                nodes: [{
+                    object: 'block',
+                    type: 'paragraph',
+                    nodes: [{
+                        object: 'text',
+                        text: thing.text,
+                        marks: [
+                            {
+                                'object': 'mark',
+                                'type': 'html',
+                                'data': {}
+                            }
+                        ]
+                    }],
+                    data: {}
+                }]
+            };            break;
+        case 'List':
+            result = {
+                'object': 'block',
+                'data': {},
+                'type': thing.type === 'ordered' ? 'ol_list' : 'ul_list',
+                'nodes': this.processChildNodes(thing)
+            };
             break;
         case 'Item':
-            if(parameters.type === 'ordered') {
-                parameters.result += '1. ';
-            }
-            else {
-                parameters.result += '* ';
-            }
-            parameters.result += ToStringVisitor.visitChildren(this, thing);
+            result = {
+                'object': 'block',
+                'type': 'list_item',
+                'data': {},
+                'nodes': this.processChildNodes(thing.nodes[0]) // discard the para
+            };
             break;
         case 'Document':
-            parameters.result += ToStringVisitor.visitChildren(this, thing);
+            result = {
+                'object': 'document',
+                'nodes': this.processChildNodes(thing),
+                'data' : {}
+            };
             break;
         default:
             throw new Error(`Unhandled type ${thing.getType()}`);
         }
+
+        parameters.result = result;
     }
 }
 

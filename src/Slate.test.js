@@ -22,15 +22,13 @@ const Value = require('slate').Value;
 const CommonMarkParser = require('@accordproject/markdown-transform').CommonMarkParser;
 const commonMarkToString = require('@accordproject/markdown-transform').commonMarkToString;
 const slateToCommonMarkAst = require('./slateToCommonMarkAst');
+const commonMarkAstToSlate = require('./commonMarkAstToSlate');
+
 let parser = null;
 
 // @ts-ignore
 beforeAll(() => {
     parser = new CommonMarkParser();
-    // const result = parser.parse('this is `some code`.');
-    // const json = parser.getSerializer().toJSON(result);
-    // console.log(JSON.stringify(json, null, 4));
-    // console.log(commonMarkToString(result));
 });
 
 /**
@@ -52,20 +50,41 @@ function getSlateFiles() {
 }
 
 describe('slate', () => {
-    getSlateFiles().forEach( ([file, jsonText]) => {
-        it(`converts ${file} to concerto`, () => {
-            const value = Value.fromJSON(JSON.parse(jsonText));
-            const concertoObject = slateToCommonMarkAst(value.document);
-            const json = parser.getSerializer().toJSON(concertoObject);
-            // console.log(JSON.stringify(json, null, 4));
-            expect(json).toMatchSnapshot();
+    getSlateFiles().forEach( ([file, jsonText], index) => {
+        if(index === 0) {
+            it(`converts ${file} to concerto`, () => {
+                const slateDom = JSON.parse(jsonText);
+                const value = Value.fromJSON(slateDom);
+                const concertoObject = slateToCommonMarkAst(value.document);
+                const json = parser.getSerializer().toJSON(concertoObject);
+                console.log('From slate', JSON.stringify(json, null, 4));
 
-            // load expected markdown
-            const extension = path.extname(file);
-            const mdFile = path.basename(file,extension);
-            const expectedMarkdown = fs.readFileSync(__dirname + '/../test/' + mdFile + '.md', 'utf8');
-            const md = commonMarkToString(concertoObject);
-            expect(md).toEqual(expectedMarkdown);
-        });
+                // check no changes to the concerto
+                expect(json).toMatchSnapshot();
+
+                // load expected markdown
+                const extension = path.extname(file);
+                const mdFile = path.basename(file,extension);
+                const expectedMarkdown = fs.readFileSync(__dirname + '/../test/' + mdFile + '.md', 'utf8');
+                const md = commonMarkToString(concertoObject);
+
+                // check that the markdown serialization hasn't changed
+                expect(md).toEqual(expectedMarkdown);
+
+                // convert the expected markdown to concerto and compare
+                const expectedConcertoObject = parser.parse(expectedMarkdown);
+                const expectedJson = parser.getSerializer().toJSON(expectedConcertoObject);
+
+                // check that ast created from slate and from the expected md is the same
+                expect(json).toEqual(expectedJson);
+
+                // now convert the expected ast back to slate and compare
+                const expectedSlate = commonMarkAstToSlate(expectedConcertoObject);
+                console.log('Expected Slate', JSON.stringify(expectedSlate, null, 4));
+
+                // check roundtrip
+                expect(expectedSlate).toEqual(slateDom.document);
+            });
+        }
     });
 });
