@@ -19,7 +19,7 @@ Object {
       ],
     },
   ],
-  "xmlns": "slate",
+  "xmlns": "http://commonmark.org/xml/1.0",
 }
 `;
 
@@ -37,7 +37,7 @@ Object {
       ],
     },
   ],
-  "xmlns": "slate",
+  "xmlns": "http://commonmark.org/xml/1.0",
 }
 `;
 
@@ -62,7 +62,7 @@ code block.
       ],
     },
   ],
-  "xmlns": "slate",
+  "xmlns": "http://commonmark.org/xml/1.0",
 }
 `;
 
@@ -145,7 +145,7 @@ Object {
       "type": "ordered",
     },
   ],
-  "xmlns": "slate",
+  "xmlns": "http://commonmark.org/xml/1.0",
 }
 `;
 
@@ -208,7 +208,7 @@ Object {
       ],
     },
   ],
-  "xmlns": "slate",
+  "xmlns": "http://commonmark.org/xml/1.0",
 }
 `;
 
@@ -226,7 +226,7 @@ html block.
 end.",
     },
   ],
-  "xmlns": "slate",
+  "xmlns": "http://commonmark.org/xml/1.0",
 }
 `;
 
@@ -240,7 +240,7 @@ Object {
 ",
     },
   ],
-  "xmlns": "slate",
+  "xmlns": "http://commonmark.org/xml/1.0",
 }
 `;
 
@@ -263,7 +263,7 @@ Object {
       ],
     },
   ],
-  "xmlns": "slate",
+  "xmlns": "http://commonmark.org/xml/1.0",
 }
 `;
 
@@ -296,7 +296,7 @@ Object {
       ],
     },
   ],
-  "xmlns": "slate",
+  "xmlns": "http://commonmark.org/xml/1.0",
 }
 `;
 
@@ -354,7 +354,7 @@ Object {
       "type": "ordered",
     },
   ],
-  "xmlns": "slate",
+  "xmlns": "http://commonmark.org/xml/1.0",
 }
 `;
 
@@ -390,7 +390,7 @@ Object {
       ],
     },
   ],
-  "xmlns": "slate",
+  "xmlns": "http://commonmark.org/xml/1.0",
 }
 `;
 
@@ -408,7 +408,7 @@ Object {
       ],
     },
   ],
-  "xmlns": "slate",
+  "xmlns": "http://commonmark.org/xml/1.0",
 }
 `;
 
@@ -426,7 +426,7 @@ Object {
       ],
     },
   ],
-  "xmlns": "slate",
+  "xmlns": "http://commonmark.org/xml/1.0",
 }
 `;
 
@@ -492,7 +492,7 @@ Object {
       ],
     },
   ],
-  "xmlns": "slate",
+  "xmlns": "http://commonmark.org/xml/1.0",
 }
 `;
 
@@ -550,6 +550,6 @@ Object {
       "type": "bullet",
     },
   ],
-  "xmlns": "slate",
+  "xmlns": "http://commonmark.org/xml/1.0",
 }
 `;
