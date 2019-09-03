@@ -19,8 +19,8 @@
 const fs = require('fs');
 const path = require('path');
 const Value = require('slate').Value;
-const CommonMarkParser = require('@accordproject/markdown-transform').CommonMarkParser;
-const commonMarkToString = require('@accordproject/markdown-transform').commonMarkToString;
+const CommonmarkParser = require('@accordproject/markdown-transform').CommonmarkParser;
+const CommonmarkToString = require('@accordproject/markdown-transform').CommonmarkToString;
 const slateToCommonMarkAst = require('./slateToCommonMarkAst');
 const commonMarkAstToSlate = require('./commonMarkAstToSlate');
 
@@ -28,7 +28,7 @@ let parser = null;
 
 // @ts-ignore
 beforeAll(() => {
-    parser = new CommonMarkParser();
+    parser = new CommonmarkParser();
 });
 
 /**
@@ -66,7 +66,7 @@ describe('slate', () => {
                 const extension = path.extname(file);
                 const mdFile = path.basename(file,extension);
                 const expectedMarkdown = fs.readFileSync(__dirname + '/../test/' + mdFile + '.md', 'utf8');
-                const md = commonMarkToString(concertoObject);
+                const md = CommonmarkToString(concertoObject);
 
                 // check that the markdown serialization hasn't changed
                 expect(md).toEqual(expectedMarkdown);

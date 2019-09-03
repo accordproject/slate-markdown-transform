@@ -16,7 +16,7 @@
 
 const NS = 'org.accordproject.commonmark';
 
-const CommonMarkParser = require('@accordproject/markdown-transform').CommonMarkParser;
+const CommonmarkParser = require('@accordproject/markdown-transform').CommonmarkParser;
 
 /**
  * Converts a Slate document node to CommonMark AST
@@ -27,11 +27,11 @@ function slateToCommonMarkAst(document) {
 
     const result = {
         $class : 'org.accordproject.commonmark.Document',
-        xmlns : 'slate',
+        xmlns : 'http://commonmark.org/xml/1.0',
         nodes : []
     };
     _recursive(result, document.nodes);
-    const parser = new CommonMarkParser();
+    const parser = new CommonmarkParser();
     return parser.convertToConcertoObject(result);
 }
 

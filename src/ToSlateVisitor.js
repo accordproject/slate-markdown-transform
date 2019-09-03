@@ -14,7 +14,7 @@
 
 'use strict';
 
-const CommonMarkParser = require('@accordproject/markdown-transform').CommonMarkParser;
+const CommonmarkParser = require('@accordproject/markdown-transform').CommonmarkParser;
 
 /**
  * Converts a commonmark AST to a Slate DOM.
@@ -114,7 +114,7 @@ class ToSlateVisitor {
             throw new Error(`Node ${thing.getType()} doesn't have any children!`);
         }
 
-        const parser = new CommonMarkParser();
+        const parser = new CommonmarkParser();
         const json = parser.getSerializer().toJSON(thing);
         console.log('Processing', JSON.stringify(json, null, 4));
 
