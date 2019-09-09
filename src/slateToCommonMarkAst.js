@@ -96,7 +96,7 @@ function _recursive(parent, nodes) {
                 break;
             case 'ol_list':
             case 'ul_list':
-                result = {$class : `${NS}.List`, type: json.type === 'ol_list' ? 'ordered' : 'bullet', delimiter: json.data.delimiter ? json.data.delimiter : 'period', start: json.data.start ? json.data.start : '1', tight: json.data.tight, nodes: []};
+                result = {$class : `${NS}.List`, type: json.type === 'ol_list' ? 'ordered' : 'bullet', delimiter: json.data.delimiter, start: json.data.start, tight: json.data.tight, nodes: []};
                 break;
             case 'list_item':
                 result = {$class : `${NS}.Item`, nodes: []};

@@ -8,9 +8,7 @@
                 "object": "block",
                 "type": "ul_list",
                 "data": {
-                    "tight" : "true",
-                    "delimiter" : "period",
-                    "start" : "1"
+                    "tight" : "true"
                 },
                 "nodes": [
                     {

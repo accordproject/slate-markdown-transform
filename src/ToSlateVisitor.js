@@ -277,7 +277,7 @@ class ToSlateVisitor {
         case 'List':
             result = {
                 'object': 'block',
-                'data': { tight: thing.tight, start: thing.start ? thing.start : '1', delimiter: thing.delimiter ? thing.delimiter : 'period'},
+                'data': { tight: thing.tight, start: thing.start, delimiter: thing.delimiter},
                 'type': thing.type === 'ordered' ? 'ol_list' : 'ul_list',
                 'nodes': this.processChildNodes(thing)
             };

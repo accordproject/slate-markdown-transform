@@ -50,37 +50,35 @@ function getSlateFiles() {
 
 describe('slate', () => {
     getSlateFiles().forEach( ([file, jsonText], index) => {
-        if(index < 13) {
-            it(`converts ${file} to concerto`, () => {
-                const slateDom = JSON.parse(jsonText);
-                const value = Value.fromJSON(slateDom);
-                const concertoObject = slateToCommonMarkAst(value.document);
-                const json = parser.getSerializer().toJSON(concertoObject);
-                console.log('From slate', JSON.stringify(json, null, 4));
+        it(`converts ${file} to concerto`, () => {
+            const slateDom = JSON.parse(jsonText);
+            const value = Value.fromJSON(slateDom);
+            const concertoObject = slateToCommonMarkAst(value.document);
+            const json = parser.getSerializer().toJSON(concertoObject);
+            console.log('From slate', JSON.stringify(json, null, 4));
 
-                // check no changes to the concerto
-                expect(json).toMatchSnapshot();
+            // check no changes to the concerto
+            expect(json).toMatchSnapshot();
 
-                // load expected markdown
-                const extension = path.extname(file);
-                const mdFile = path.basename(file,extension);
-                const expectedMarkdown = fs.readFileSync(__dirname + '/../test/' + mdFile + '.md', 'utf8');
+            // load expected markdown
+            const extension = path.extname(file);
+            const mdFile = path.basename(file,extension);
+            const expectedMarkdown = fs.readFileSync(__dirname + '/../test/' + mdFile + '.md', 'utf8');
 
-                // convert the expected markdown to concerto and compare
-                const expectedConcertoObject = parser.parse(expectedMarkdown);
-                const expectedJson = parser.getSerializer().toJSON(expectedConcertoObject);
-                console.log('Expected JSON', JSON.stringify(expectedJson, null, 4));
+            // convert the expected markdown to concerto and compare
+            const expectedConcertoObject = parser.parse(expectedMarkdown);
+            const expectedJson = parser.getSerializer().toJSON(expectedConcertoObject);
+            console.log('Expected JSON', JSON.stringify(expectedJson, null, 4));
 
-                // check that ast created from slate and from the expected md is the same
-                expect(json).toEqual(expectedJson);
+            // check that ast created from slate and from the expected md is the same
+            expect(json).toEqual(expectedJson);
 
-                // now convert the expected ast back to slate and compare
-                const expectedSlate = commonMarkAstToSlate(expectedConcertoObject);
-                console.log('Expected Slate', JSON.stringify(expectedSlate, null, 4));
+            // now convert the expected ast back to slate and compare
+            const expectedSlate = commonMarkAstToSlate(expectedConcertoObject);
+            console.log('Expected Slate', JSON.stringify(expectedSlate, null, 4));
 
-                // check roundtrip
-                expect(expectedSlate).toEqual(slateDom.document);
-            });
-        }
+            // check roundtrip
+            expect(expectedSlate).toEqual(slateDom.document);
+        });
     });
 });
