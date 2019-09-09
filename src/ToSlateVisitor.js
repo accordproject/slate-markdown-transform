@@ -47,6 +47,7 @@ class ToSlateVisitor {
             break;
         }
 
+        // recurse on child nodes
         if(thing.nodes && thing.nodes.length > 0) {
             result = ToSlateVisitor.getMarks(thing.nodes[0], result);
         }
@@ -276,7 +277,7 @@ class ToSlateVisitor {
         case 'List':
             result = {
                 'object': 'block',
-                'data': {},
+                'data': { tight: thing.tight, start: thing.start ? thing.start : '1', delimiter: thing.delimiter ? thing.delimiter : 'period'},
                 'type': thing.type === 'ordered' ? 'ol_list' : 'ul_list',
                 'nodes': this.processChildNodes(thing)
             };

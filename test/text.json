@@ -52,12 +52,12 @@
                         "marks": [
                             {
                                 "object": "mark",
-                                "type": "bold",
+                                "type": "italic",
                                 "data": {}
                             },
                             {
                                 "object": "mark",
-                                "type": "italic",
+                                "type": "bold",
                                 "data": {}
                             }
                         ]

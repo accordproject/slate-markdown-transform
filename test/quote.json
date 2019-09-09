@@ -7,12 +7,18 @@
             {
                 "object": "block",
                 "type": "block_quote",
-                "data": {},
                 "nodes": [
                     {
-                        "object": "text",
-                        "text": "this is a quote",
-                        "marks": []
+                        "object": "block",
+                        "type": "paragraph",
+                        "data": {},
+                        "nodes": [
+                            {
+                                "object": "text",
+                                "text": "this is a quote",
+                                "marks": []
+                            }
+                        ]
                     }
                 ]
             }

@@ -50,7 +50,11 @@
             {
                 "object": "block",
                 "type": "ol_list",
-                "data": {},
+                "data": {
+                    "tight" : "true",
+                    "delimiter" : "period",
+                    "start" : "1"
+                },
                 "nodes": [
                     {
                         "object": "block",

@@ -20,7 +20,6 @@ const fs = require('fs');
 const path = require('path');
 const Value = require('slate').Value;
 const CommonmarkParser = require('@accordproject/markdown-transform').CommonmarkParser;
-const CommonmarkToString = require('@accordproject/markdown-transform').CommonmarkToString;
 const slateToCommonMarkAst = require('./slateToCommonMarkAst');
 const commonMarkAstToSlate = require('./commonMarkAstToSlate');
 
@@ -51,7 +50,7 @@ function getSlateFiles() {
 
 describe('slate', () => {
     getSlateFiles().forEach( ([file, jsonText], index) => {
-        if(index === 0) {
+        if(index < 13) {
             it(`converts ${file} to concerto`, () => {
                 const slateDom = JSON.parse(jsonText);
                 const value = Value.fromJSON(slateDom);
@@ -66,14 +65,11 @@ describe('slate', () => {
                 const extension = path.extname(file);
                 const mdFile = path.basename(file,extension);
                 const expectedMarkdown = fs.readFileSync(__dirname + '/../test/' + mdFile + '.md', 'utf8');
-                const md = CommonmarkToString(concertoObject);
-
-                // check that the markdown serialization hasn't changed
-                expect(md).toEqual(expectedMarkdown);
 
                 // convert the expected markdown to concerto and compare
                 const expectedConcertoObject = parser.parse(expectedMarkdown);
                 const expectedJson = parser.getSerializer().toJSON(expectedConcertoObject);
+                console.log('Expected JSON', JSON.stringify(expectedJson, null, 4));
 
                 // check that ast created from slate and from the expected md is the same
                 expect(json).toEqual(expectedJson);

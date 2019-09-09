@@ -66,27 +66,21 @@ function _recursive(parent, nodes) {
                 break;
             case 'heading_one':
                 result = {$class : `${NS}.Heading`, level : '1', nodes: []};
-                result.nodes.push({$class : `${NS}.Paragraph`, nodes: []});
                 break;
             case 'heading_two':
                 result = {$class : `${NS}.Heading`, level : '2', nodes: []};
-                result.nodes.push({$class : `${NS}.Paragraph`, nodes: []});
                 break;
             case 'heading_three':
                 result = {$class : `${NS}.Heading`, level : '3', nodes: []};
-                result.nodes.push({$class : `${NS}.Paragraph`, nodes: []});
                 break;
             case 'heading_four':
                 result = {$class : `${NS}.Heading`, level : '4', nodes: []};
-                result.nodes.push({$class : `${NS}.Paragraph`, nodes: []});
                 break;
             case 'heading_five':
                 result = {$class : `${NS}.Heading`, level : '5', nodes: []};
-                result.nodes.push({$class : `${NS}.Paragraph`, nodes: []});
                 break;
             case 'heading_six':
                 result = {$class : `${NS}.Heading`, level : '6', nodes: []};
-                result.nodes.push({$class : `${NS}.Paragraph`, nodes: []});
                 break;
             case 'block_quote':
                 result = {$class : `${NS}.BlockQuote`, nodes: []};
@@ -101,11 +95,8 @@ function _recursive(parent, nodes) {
                 result = {$class : `${NS}.HtmlInline`};
                 break;
             case 'ol_list':
-                result = {$class : `${NS}.List`, type: 'ordered', tight: 'true', nodes: []};
-                break;
             case 'ul_list':
-                result = {$class : `${NS}.List`, type: 'bullet', tight: 'true',
-                    nodes: []};
+                result = {$class : `${NS}.List`, type: json.type === 'ol_list' ? 'ordered' : 'bullet', delimiter: json.data.delimiter ? json.data.delimiter : 'period', start: json.data.start ? json.data.start : '1', tight: json.data.tight, nodes: []};
                 break;
             case 'list_item':
                 result = {$class : `${NS}.Item`, nodes: []};
